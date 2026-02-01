@@ -9,7 +9,7 @@ import model.GameModel;
 
 public class GameComponent extends JComponent {
 
-	
+	//comment ctestomment commentk
 	
 	private GameModel model;
 
