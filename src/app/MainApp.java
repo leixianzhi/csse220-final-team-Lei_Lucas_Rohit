@@ -21,10 +21,9 @@ public class MainApp {
 	public void run() {
 		GameWindow.show();
 		
-		//???
+
 		// Hint: MainApp should not contain game logic or drawing code
 		}
 }
 
 
-// test commit
