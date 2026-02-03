@@ -3,6 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import ui.Wall;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +19,13 @@ public class GameModel {
     public GameModel(int worldWidth, int worldHeight) {
         this.worldWidth = worldWidth;
         this.worldHeight = worldHeight;
-
         player = new Player(50, 50);
         objects.add(player);
 
         objects.add(new Enemy(300, 200));
+
+       
+        objects.add(new Wall(200, 300, 200, 20));
     }
 
     public void updateAll() {

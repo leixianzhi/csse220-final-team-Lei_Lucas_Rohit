@@ -17,9 +17,12 @@ public class GameWindow {
         JFrame frame = new JFrame("CSSE220 Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(view);
-
         GameController controller = new GameController(model.getPlayer());
-        frame.addKeyListener(controller);
+     // frame.addKeyListener(controller);    
+        view.addKeyListener(controller);          
+        frame.setVisible(true);
+        view.setFocusable(true);
+        view.requestFocusInWindow();
 
         frame.pack();
         frame.setLocationRelativeTo(null);
