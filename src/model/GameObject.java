@@ -21,4 +21,3 @@ public abstract class GameObject {
 
     public abstract void drawOn(Graphics2D g2);
 }
-//
