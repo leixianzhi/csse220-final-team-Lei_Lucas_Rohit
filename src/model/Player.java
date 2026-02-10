@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 public class Player extends GameObject {
 
     private int lives = 3;
+    private int score = 0;
 	private final int speed = 4;
     private boolean left, right, up, down;
     private boolean hitLastFrame = false;
@@ -27,6 +28,9 @@ public class Player extends GameObject {
     public void setRight(boolean v) { right = v; }
     public void setUp(boolean v)    { up = v; }
     public void setDown(boolean v)  { down = v; }
+    
+    public int getLives() { return lives; }
+    public int getScore() { return score; }
     
     @Override
     public void update(GameModel model) {
