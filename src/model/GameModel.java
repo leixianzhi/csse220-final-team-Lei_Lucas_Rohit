@@ -14,6 +14,7 @@ public class GameModel {
     private final int worldHeight;
 
     private final List<GameObject> objects = new ArrayList<>();
+    private final List<Enemy> enemies = new ArrayList<>();
     private final Player player;
 
     public GameModel(int worldWidth, int worldHeight) {
@@ -22,10 +23,16 @@ public class GameModel {
         player = new Player(50, 50);
         objects.add(player);
 
-        objects.add(new Enemy(300, 200));
+        enemies.add(new Enemy(300, 200));
+        // place enemies in list of enemies
 
        
         objects.add(new Wall(200, 300, 200, 20));
+        
+        for (Enemy enemy : enemies) {
+			objects.add(enemy);	// add pointers to enemies in objects, allowing iteration over them separately
+		}
+        
     }
 
     public void updateAll() {
@@ -40,6 +47,10 @@ public class GameModel {
 
     public Player getPlayer() {
         return player;
+    }
+    
+    public List<Enemy> getEnemies() {
+    	return enemies;
     }
 
     public int getWorldWidth() {
