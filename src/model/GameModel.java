@@ -28,7 +28,7 @@ public class GameModel {
         // place enemies in list of enemies
         
         collectibles.add(new Collectible(100, 100));
-//        collectibles.add(new Collectible(200, 100));
+        collectibles.add(new Collectible(200, 100));
        
         objects.add(new Wall(200, 300, 200, 20));
         
