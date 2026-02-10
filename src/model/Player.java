@@ -8,6 +8,7 @@ public class Player extends GameObject {
     private int lives = 3;
 	private final int speed = 4;
     private boolean left, right, up, down;
+    private boolean hitLastFrame = false;
     private BufferedImage sprite;
 
     public Player(int x, int y) {
@@ -26,8 +27,6 @@ public class Player extends GameObject {
     public void setRight(boolean v) { right = v; }
     public void setUp(boolean v)    { up = v; }
     public void setDown(boolean v)  { down = v; }
-
-    public void loseLife() { lives--; }
     
     @Override
     public void update(GameModel model) {
@@ -38,6 +37,22 @@ public class Player extends GameObject {
 
         x = Math.max(0, Math.min(x, model.getWorldWidth() - w));
         y = Math.max(0, Math.min(y, model.getWorldHeight() - h));
+        
+        
+        boolean hitThisFrame = false;
+        
+        for (Enemy enemy : model.getEnemies()) {
+			if (this.getBounds().intersects(enemy.getBounds())) {
+				hitThisFrame = true;
+				break;
+			}
+		}
+        
+        // if player touches enemy this frame but not last frame, lose a life.
+        if (hitThisFrame && !hitLastFrame) { lives--; }
+        
+        hitLastFrame = hitThisFrame;
+        
     }
 
     @Override
