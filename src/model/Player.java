@@ -5,7 +5,8 @@ import javax.imageio.ImageIO;
 
 public class Player extends GameObject {
 
-    private final int speed = 4;
+    private int lives = 3;
+	private final int speed = 4;
     private boolean left, right, up, down;
     private BufferedImage sprite;
 
@@ -26,6 +27,8 @@ public class Player extends GameObject {
     public void setUp(boolean v)    { up = v; }
     public void setDown(boolean v)  { down = v; }
 
+    public void loseLife() { lives--; }
+    
     @Override
     public void update(GameModel model) {
         if (left)  x -= speed;
