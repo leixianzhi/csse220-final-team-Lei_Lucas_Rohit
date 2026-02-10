@@ -15,6 +15,7 @@ public class GameModel {
 
     private final List<GameObject> objects = new ArrayList<>();
     private final List<Enemy> enemies = new ArrayList<>();
+    private final List<Collectible> collectibles = new ArrayList<>();
     private final Player player;
 
     public GameModel(int worldWidth, int worldHeight) {
@@ -51,6 +52,10 @@ public class GameModel {
     
     public List<Enemy> getEnemies() {
     	return enemies;
+    }
+    
+    public List<Collectible> getCollectibles() {
+    	return collectibles;
     }
 
     public int getWorldWidth() {

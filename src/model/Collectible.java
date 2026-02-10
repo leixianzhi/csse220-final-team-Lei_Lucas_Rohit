@@ -29,8 +29,7 @@ public class Collectible extends GameObject {
 
 	@Override
 	public void drawOn(Graphics2D g2) {
-		// TODO Auto-generated method stub
-		
+        g2.drawImage(sprite, x, y, w, h, null);		
 	}
 
 }
