@@ -33,6 +33,10 @@ public class GameModel {
         for (Enemy enemy : enemies) {
 			objects.add(enemy);	// add pointers to enemies in objects, allowing iteration over them separately
 		}
+        for (Collectible collectible : collectibles) {
+        	objects.add(collectible);
+        }
+        
         
     }
 

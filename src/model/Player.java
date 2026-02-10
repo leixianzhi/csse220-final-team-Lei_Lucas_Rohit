@@ -52,6 +52,13 @@ public class Player extends GameObject {
 			}
 		}
         
+        for (Collectible collectible : model.getCollectibles()) {
+        	if (this.getBounds().intersects(collectible.getBounds())) {
+        		score++;
+        		model.getCollectibles().remove(collectible);
+        	}
+        }
+        
         // if player touches enemy this frame but not last frame, lose a life.
         if (hitThisFrame && !hitLastFrame) { lives--; }
         

@@ -24,7 +24,6 @@ public class Collectible extends GameObject {
 	@Override
 	public void update(GameModel model) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
