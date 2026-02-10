@@ -53,9 +53,9 @@ public class Player extends GameObject {
 		}
         
         for (Collectible collectible : model.getCollectibles()) {
-        	if (this.getBounds().intersects(collectible.getBounds())) {
+        	if (!collectible.isCollected() && this.getBounds().intersects(collectible.getBounds())) {
         		score++;
-        		model.getCollectibles().remove(collectible);
+        		collectible.setCollected();
         	}
         }
         

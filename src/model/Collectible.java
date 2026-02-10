@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 public class Collectible extends GameObject {
 	
 	private BufferedImage sprite;
+	private boolean collected = false;
 	
 	public Collectible(int x, int y) {
 		super(x, y, 16, 16);
@@ -28,7 +29,15 @@ public class Collectible extends GameObject {
 
 	@Override
 	public void drawOn(Graphics2D g2) {
-        g2.drawImage(sprite, x, y, w, h, null);		
+        if (!collected) { g2.drawImage(sprite, x, y, w, h, null); }		
+	}
+
+	public boolean isCollected() {
+		return collected;
+	}
+
+	public void setCollected() {
+		this.collected = true;
 	}
 
 }

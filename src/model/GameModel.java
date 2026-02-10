@@ -26,7 +26,9 @@ public class GameModel {
 
         enemies.add(new Enemy(300, 200));
         // place enemies in list of enemies
-
+        
+        collectibles.add(new Collectible(100, 100));
+//        collectibles.add(new Collectible(200, 100));
        
         objects.add(new Wall(200, 300, 200, 20));
         
@@ -61,7 +63,7 @@ public class GameModel {
     public List<Collectible> getCollectibles() {
     	return collectibles;
     }
-
+    
     public int getWorldWidth() {
         return worldWidth;
     }
