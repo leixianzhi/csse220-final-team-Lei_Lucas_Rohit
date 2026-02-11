@@ -16,6 +16,7 @@ public class GameModel {
     private final List<GameObject> objects = new ArrayList<>();
     private final List<Enemy> enemies = new ArrayList<>();
     private final List<Collectible> collectibles = new ArrayList<>();
+    private final List<Wall> walls = new ArrayList<>();
     private final Player player;
 
     public GameModel(int worldWidth, int worldHeight) {
@@ -30,13 +31,16 @@ public class GameModel {
         collectibles.add(new Collectible(100, 100));
         collectibles.add(new Collectible(200, 100));
        
-        objects.add(new Wall(200, 300, 200, 20));
+        walls.add(new Wall(200, 300, 200, 20));
         
         for (Enemy enemy : enemies) {
 			objects.add(enemy);	// add pointers to enemies in objects, allowing iteration over them separately
 		}
         for (Collectible collectible : collectibles) {
         	objects.add(collectible);
+        }
+        for (Wall wall : walls) {
+        	objects.add(wall);
         }
         
         
@@ -62,6 +66,10 @@ public class GameModel {
     
     public List<Collectible> getCollectibles() {
     	return collectibles;
+    }
+    
+    public List<Wall> getWalls() {
+    	return walls;
     }
     
     public int getWorldWidth() {

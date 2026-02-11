@@ -3,6 +3,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
+import ui.Wall;
+
 public class Player extends GameObject {
 
     private int lives = 3;
@@ -34,10 +36,38 @@ public class Player extends GameObject {
     
     @Override
     public void update(GameModel model) {
-        if (left)  x -= speed;
-        if (right) x += speed;
-        if (up)    y -= speed;
-        if (down)  y += speed;
+        if (left) {
+        	x -= speed;
+        	for (Wall wall : model.getWalls()) {				
+        		if (this.getBounds().intersects(wall.getBounds())) {
+        			x += speed;
+        		}
+			}
+        }
+        if (right) {
+        	x += speed;
+        	for (Wall wall : model.getWalls()) {				
+	        	if (this.getBounds().intersects(wall.getBounds())) {
+	        		x -= speed;
+	        	}
+        	}
+        }
+        if (up) {
+        	y -= speed;
+        	for (Wall wall : model.getWalls()) {				
+	        	if (this.getBounds().intersects(wall.getBounds())) {
+	        		y += speed;
+	        	}
+        	}
+        }
+        if (down) {
+        	y += speed;
+        	for (Wall wall : model.getWalls()) {
+	        	if (this.getBounds().intersects(wall.getBounds())) {
+	        		y -= speed;
+	        	}
+        	}
+        }
 
         x = Math.max(0, Math.min(x, model.getWorldWidth() - w));
         y = Math.max(0, Math.min(y, model.getWorldHeight() - h));
