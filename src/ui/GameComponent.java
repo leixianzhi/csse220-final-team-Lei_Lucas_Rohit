@@ -42,16 +42,34 @@ public class GameComponent extends JComponent {
 		
 	}
     
+    private void printGameOver(Graphics2D g2d) {
+    	
+    	Font ogFont = g2d.getFont();
+    	
+    	g2d.setFont(new Font("Comic Sans MS", Font.PLAIN, 50));
+    	
+    	g2d.drawString("Game Over!", model.getWorldWidth()/2 - 125, model.getWorldHeight()/2);
+    	
+    	g2d.setFont(ogFont);	// preserves font for future drawings
+    	
+    }
+    
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        for (GameObject obj : model.getObjects()) {
-            obj.drawOn(g2);
+        if (model.getPlayer().getLives() > 0) {
+	        
+        	for (GameObject obj : model.getObjects()) {
+	            obj.drawOn(g2);
+	        }
+	        
+	        printHUD(g2);
+	        
+        } else {
+        	printGameOver(g2);
         }
-        
-        printHUD(g2);
         
     }
 }
