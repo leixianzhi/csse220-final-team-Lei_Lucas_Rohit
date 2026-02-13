@@ -5,6 +5,8 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 import javax.imageio.ImageIO;
 
+import ui.Wall;
+
 public class Enemy extends GameObject {
 
     private BufferedImage sprite;
@@ -51,7 +53,17 @@ public class Enemy extends GameObject {
         }
 
         x += dx;
+        for (Wall wall : model.getWalls()) {				
+    		if (this.getBounds().intersects(wall.getBounds())) {
+    			x -= dx;
+    		}
+		}
         y += dy;
+        for (Wall wall : model.getWalls()) {				
+    		if (this.getBounds().intersects(wall.getBounds())) {
+    			y -= dy;
+    		}
+		}
 
         // 保证 enemy 不出世界边界
         x = Math.max(0, Math.min(x, model.getWorldWidth() - w));
