@@ -1,7 +1,10 @@
 package model;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import ui.Wall;
 
@@ -78,5 +81,35 @@ public class GameModel {
 
     public int getWorldHeight() {
         return worldHeight;
+    }
+    
+    private void buildLevel(File levelFile) {
+    	
+    	ArrayList<String> lines = new ArrayList<>();
+    	int levelWidth = 0;
+    	int levelHeight = 0;
+    	
+    	try {
+			Scanner dimensionScanner = new Scanner(levelFile);
+			for (String line = dimensionScanner.nextLine(); dimensionScanner.hasNextLine(); line = dimensionScanner.nextLine()) {
+				levelWidth = Math.max(levelWidth, line.length());
+				levelHeight++;
+				lines.add(line);
+			}
+			dimensionScanner.close();
+			
+			final int TILE_WIDTH = worldWidth/levelWidth;
+			final int TILE_HEIGHT = worldHeight/levelHeight;
+			
+			for (String line : lines) {
+				for (int col = 0; col < line.length(); col++) {
+				    char tile = line.charAt(col);
+				    System.out.print(tile);
+				}
+			}
+			
+		} catch (FileNotFoundException e) {
+			System.out.println("Exception: Level File Not Found");
+		}
     }
 }
