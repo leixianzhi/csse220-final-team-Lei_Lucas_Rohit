@@ -25,6 +25,18 @@ public class Player extends GameObject {
             e.printStackTrace();
         }
     }
+    
+    public Player(int x, int y, int width, int height) {
+    	super(x, y, width, height);
+    	
+    	try {
+    		sprite = ImageIO.read(
+    				getClass().getResource("steve.png")
+    				);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
 
     public void setLeft(boolean v)  { left = v; }
     public void setRight(boolean v) { right = v; }

@@ -31,6 +31,16 @@ public class Enemy extends GameObject {
         }
     } // Enemy
     
+    public Enemy(int x, int y, int width, int height) {
+    	super(x, y, width, height);
+    	
+    	try {
+    		sprite = ImageIO.read(getClass().getResource("zombie.png"));
+    	} catch (Exception e) {
+    		System.err.println("Enemy sprite missing. Using placeholder.");
+    	}
+    }
+    
 
     @Override
     public void update(GameModel model) {
