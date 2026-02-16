@@ -34,7 +34,9 @@ public class GameModel {
         collectibles.add(new Collectible(100, 100));
         collectibles.add(new Collectible(200, 100));
        
-        walls.add(new Wall(200, 300, 200, 20));
+//        walls.add(new Wall(200, 300, 200, 20));
+		File lvl1 = new File("level1.txt");
+		buildLevel(lvl1);
         
         for (Enemy enemy : enemies) {
 			objects.add(enemy);	// add pointers to enemies in objects, allowing iteration over them separately
@@ -98,13 +100,17 @@ public class GameModel {
 			}
 			dimensionScanner.close();
 			
+			levelHeight++;
+			
 			final int TILE_WIDTH = worldWidth/levelWidth;
 			final int TILE_HEIGHT = worldHeight/levelHeight;
 			
-			for (String line : lines) {
-				for (int col = 0; col < line.length(); col++) {
-				    char tile = line.charAt(col);
-				    System.out.print(tile);
+			for (int row = 0; row < lines.size(); row++) {
+				for (int col = 0; col < lines.get(row).length(); col++) {
+				    char tile = lines.get(row).charAt(col);
+				    if (tile == '*') {						
+				    	walls.add(new Wall(col * TILE_WIDTH, row * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT));
+					}
 				}
 			}
 			
