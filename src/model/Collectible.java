@@ -21,6 +21,18 @@ public class Collectible extends GameObject {
             e.printStackTrace();
         }
 	}
+	
+	public Collectible(int x, int y, int width, int height) {
+		super(x, y, width, height);
+		
+		try {
+			sprite = ImageIO.read(
+					getClass().getResource("gold.png")
+					);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void update(GameModel model) {

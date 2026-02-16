@@ -25,29 +25,30 @@ public class GameModel {
     public GameModel(int worldWidth, int worldHeight) {
         this.worldWidth = worldWidth;
         this.worldHeight = worldHeight;
-        player = new Player(50, 50);
-        objects.add(player);
+        player = new Player(50, 500);
 
-        enemies.add(new Enemy(300, 200));
+//        enemies.add(new Enemy(300, 200));
         // place enemies in list of enemies
         
-        collectibles.add(new Collectible(100, 100));
-        collectibles.add(new Collectible(200, 100));
+//        collectibles.add(new Collectible(100, 100));
+//        collectibles.add(new Collectible(200, 100));
        
 //        walls.add(new Wall(200, 300, 200, 20));
 		File lvl1 = new File("level1.txt");
 		buildLevel(lvl1);
+//		player = buildLevelReturnPlayer(lvl1);
         
-        for (Enemy enemy : enemies) {
+        
+		objects.add(player);
+		for (Enemy enemy : enemies) {
 			objects.add(enemy);	// add pointers to enemies in objects, allowing iteration over them separately
 		}
-        for (Collectible collectible : collectibles) {
-        	objects.add(collectible);
-        }
-        for (Wall wall : walls) {
-        	objects.add(wall);
-        }
-        
+		for (Collectible collectible : collectibles) {
+			objects.add(collectible);
+		}
+		for (Wall wall : walls) {
+			objects.add(wall);
+		}
         
     }
 
@@ -90,6 +91,7 @@ public class GameModel {
     	ArrayList<String> lines = new ArrayList<>();
     	int levelWidth = 0;
     	int levelHeight = 0;
+    	Player returnedPlayer = null;
     	
     	try {
 			Scanner dimensionScanner = new Scanner(levelFile);
@@ -110,12 +112,21 @@ public class GameModel {
 				    char tile = lines.get(row).charAt(col);
 				    if (tile == '*') {						
 				    	walls.add(new Wall(col * TILE_WIDTH, row * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT));
+					} else if (tile == 'E') {
+						enemies.add(new Enemy(col * TILE_WIDTH, row * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT));
+					} else if (tile == 'o') {
+						collectibles.add(new Collectible(col * TILE_WIDTH, row * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT));
+					} else if (tile == 'P') {
+//						returnedPlayer = new Player(col * TILE_WIDTH, row * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);						
 					}
 				}
 			}
-			
+						
 		} catch (FileNotFoundException e) {
 			System.out.println("Exception: Level File Not Found");
 		}
+    	
+//		return returnedPlayer;
+    	
     }
 }
