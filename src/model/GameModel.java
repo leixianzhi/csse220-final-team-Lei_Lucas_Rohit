@@ -95,14 +95,17 @@ public class GameModel {
     	
     	try {
 			Scanner dimensionScanner = new Scanner(levelFile);
-			for (String line = dimensionScanner.nextLine(); dimensionScanner.hasNextLine(); line = dimensionScanner.nextLine()) {
+			String line;
+			while (dimensionScanner.hasNextLine()) {
+				line = dimensionScanner.nextLine();
 				levelWidth = Math.max(levelWidth, line.length());
 				levelHeight++;
 				lines.add(line);
 			}
+			
+			
 			dimensionScanner.close();
 			
-			levelHeight++;
 			
 			final int TILE_WIDTH = worldWidth/levelWidth;
 			final int TILE_HEIGHT = worldHeight/levelHeight;
@@ -120,6 +123,7 @@ public class GameModel {
 //						returnedPlayer = new Player(col * TILE_WIDTH, row * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);						
 					}
 				}
+				System.out.println("printed" + lines);
 			}
 						
 		} catch (FileNotFoundException e) {
