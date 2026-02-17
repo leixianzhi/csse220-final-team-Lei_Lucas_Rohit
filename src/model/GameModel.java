@@ -116,14 +116,13 @@ public class GameModel {
 				    if (tile == '*') {						
 				    	walls.add(new Wall(col * TILE_WIDTH, row * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT));
 					} else if (tile == 'E') {
-						enemies.add(new Enemy(col * TILE_WIDTH, row * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT));
+						enemies.add(new Enemy(col * TILE_WIDTH + TILE_WIDTH/4, row * TILE_HEIGHT + TILE_HEIGHT/4, TILE_WIDTH/2, TILE_HEIGHT/2));
 					} else if (tile == 'o') {
-						collectibles.add(new Collectible(col * TILE_WIDTH, row * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT));
+						collectibles.add(new Collectible(col * TILE_WIDTH + TILE_WIDTH/4, row * TILE_HEIGHT + TILE_HEIGHT/4, TILE_WIDTH/2, TILE_HEIGHT/2));
 					} else if (tile == 'P') {
 //						returnedPlayer = new Player(col * TILE_WIDTH, row * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);						
 					}
 				}
-				System.out.println("printed" + lines);
 			}
 						
 		} catch (FileNotFoundException e) {
