@@ -20,7 +20,7 @@ public class GameModel {
     private final List<Enemy> enemies = new ArrayList<>();
     private final List<Collectible> collectibles = new ArrayList<>();
     private final List<Wall> walls = new ArrayList<>();
-    private final Player player;
+    private Player player;
 
     public GameModel(int worldWidth, int worldHeight) {
         this.worldWidth = worldWidth;
@@ -91,7 +91,6 @@ public class GameModel {
     	ArrayList<String> lines = new ArrayList<>();
     	int levelWidth = 0;
     	int levelHeight = 0;
-    	Player returnedPlayer = null;
     	
     	try {
 			Scanner dimensionScanner = new Scanner(levelFile);
@@ -120,7 +119,7 @@ public class GameModel {
 					} else if (tile == 'o') {
 						collectibles.add(new Collectible(col * TILE_WIDTH + TILE_WIDTH/4, row * TILE_HEIGHT + TILE_HEIGHT/4, TILE_WIDTH/2, TILE_HEIGHT/2));
 					} else if (tile == 'P') {
-//						returnedPlayer = new Player(col * TILE_WIDTH, row * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);						
+						player = new Player(col * TILE_WIDTH + TILE_WIDTH/4, row * TILE_HEIGHT + TILE_HEIGHT/4, TILE_WIDTH/2, TILE_HEIGHT/2);						
 					}
 				}
 			}
@@ -128,8 +127,6 @@ public class GameModel {
 		} catch (FileNotFoundException e) {
 			System.out.println("Exception: Level File Not Found");
 		}
-    	
-//		return returnedPlayer;
-    	
+    	    	
     }
 }
