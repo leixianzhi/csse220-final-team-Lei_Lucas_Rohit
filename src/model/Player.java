@@ -48,65 +48,69 @@ public class Player extends GameObject {
     
     @Override
     public void update(GameModel model) {
-        if (left) {
-        	x -= speed;
-        	for (Wall wall : model.getWalls()) {				
-        		if (this.getBounds().intersects(wall.getBounds())) {
-        			x += speed;
-        		}
-			}
-        }
-        if (right) {
-        	x += speed;
-        	for (Wall wall : model.getWalls()) {				
-	        	if (this.getBounds().intersects(wall.getBounds())) {
-	        		x -= speed;
-	        	}
-        	}
-        }
-        if (up) {
-        	y -= speed;
-        	for (Wall wall : model.getWalls()) {				
-	        	if (this.getBounds().intersects(wall.getBounds())) {
-	        		y += speed;
-	        	}
-        	}
-        }
-        if (down) {
-        	y += speed;
-        	for (Wall wall : model.getWalls()) {
-	        	if (this.getBounds().intersects(wall.getBounds())) {
-	        		y -= speed;
-	        	}
-        	}
-        }
+
+        if (model.isGameWon()) return;
+
+        if (left)  moveX(-speed, model);
+        if (right) moveX(speed, model);
+        if (up)    moveY(-speed, model);
+        if (down)  moveY(speed, model);
 
         x = Math.max(0, Math.min(x, model.getWorldWidth() - w));
         y = Math.max(0, Math.min(y, model.getWorldHeight() - h));
-        
-        
+
         boolean hitThisFrame = false;
-        
+
         for (Enemy enemy : model.getEnemies()) {
-			if (this.getBounds().intersects(enemy.getBounds())) {
-				hitThisFrame = true;
-				break;
-			}
-		}
-        
-        for (Collectible collectible : model.getCollectibles()) {
-        	if (!collectible.isCollected() && this.getBounds().intersects(collectible.getBounds())) {
-        		score++;
-        		collectible.setCollected();
-        	}
+            if (getBounds().intersects(enemy.getBounds())) {
+                hitThisFrame = true;
+                break;
+            }
         }
-        
-        // if player touches enemy this frame but not last frame, lose a life.
-        if (hitThisFrame && !hitLastFrame) { lives--; }
-        
+
+        for (Collectible collectible : model.getCollectibles()) {
+            if (!collectible.isCollected() &&
+                    getBounds().intersects(collectible.getBounds())) {
+                score++;
+                collectible.setCollected();
+            }
+        }
+
+        if (hitThisFrame && !hitLastFrame) {
+            lives--;
+        }
+
         hitLastFrame = hitThisFrame;
-        
+
+        // WIN CONDITION
+        if (model.getNextLevel() != null &&
+                model.getNextLevel().isOpen() &&
+                getBounds().intersects(model.getNextLevel().getBounds())) {
+
+            model.setGameWon();
+        }
     }
+
+    private void moveX(int amount, GameModel model) {
+        x += amount;
+        for (Wall wall : model.getWalls()) {
+            if (getBounds().intersects(wall.getBounds())) {
+                x -= amount;
+                break;
+            }
+        }
+    }
+
+    private void moveY(int amount, GameModel model) {
+        y += amount;
+        for (Wall wall : model.getWalls()) {
+            if (getBounds().intersects(wall.getBounds())) {
+                y -= amount;
+                break;
+            }
+        }
+    }
+
 
     @Override
     public void drawOn(Graphics2D g2) {

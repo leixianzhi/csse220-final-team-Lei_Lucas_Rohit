@@ -59,18 +59,26 @@ public class GameComponent extends JComponent {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        if (model.getPlayer().getLives() > 0) {
-	        
-        	for (GameObject obj : model.getObjects()) {
-	            obj.drawOn(g2);
-	        }
-	        
-	        printHUD(g2);
-	        
-        } else {
-        	printGameOver(g2);
+        if (model.isGameWon()) {
+            g2.setFont(new Font("Comic Sans MS", Font.PLAIN, 50));
+            g2.drawString("LEVEL COMPLETE!",
+                    model.getWorldWidth()/2 - 180,
+                    model.getWorldHeight()/2);
+            return;
         }
-        
+
+        if (model.getPlayer().getLives() > 0) {
+
+            for (GameObject obj : model.getObjects()) {
+                obj.drawOn(g2);
+            }
+
+            printHUD(g2);
+
+        } else {
+            printGameOver(g2);
+        }
     }
+
 }
 
