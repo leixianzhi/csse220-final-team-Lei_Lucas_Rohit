@@ -27,8 +27,7 @@ public class GameModel {
         this.worldWidth = worldWidth;
         this.worldHeight = worldHeight;
 
-        File lvl1 = new File("level1.txt");
-        buildLevel(lvl1);
+        buildLevel(1);
 
         objects.add(player);
 
@@ -71,7 +70,9 @@ public class GameModel {
         }
     }
 
-    private void buildLevel(File levelFile) {
+    private void buildLevel(int levelNum) {
+    	
+    	File levelFile = new File("level" + levelNum + ".txt");
 
         ArrayList<String> lines = new ArrayList<>();
         int levelWidth = 0;
