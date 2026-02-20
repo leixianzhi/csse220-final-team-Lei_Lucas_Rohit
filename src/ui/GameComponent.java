@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+
 import javax.swing.JComponent;
 import javax.swing.Timer;
 
@@ -28,57 +29,50 @@ public class GameComponent extends JComponent {
         });
         timer.start();
     }
-    
+
     private void printHUD(Graphics2D g2d) {
-		
-		Font ogFont = g2d.getFont();
-		
-		g2d.setFont(new Font("Comic Sans MS", Font.PLAIN, 18));
-		
-		g2d.drawString("Lives: " + model.getPlayer().getLives(), 20, 30);
-		g2d.drawString("Score: " + model.getPlayer().getScore(), 20, 60);
-		
-		g2d.setFont(ogFont);	// preserves font for future drawings
-		
-	}
-    
-    private void printGameOver(Graphics2D g2d) {
-    	
-    	Font ogFont = g2d.getFont();
-    	
-    	g2d.setFont(new Font("Comic Sans MS", Font.PLAIN, 50));
-    	
-    	g2d.drawString("Game Over!", model.getWorldWidth()/2 - 125, model.getWorldHeight()/2);
-    	
-    	g2d.setFont(ogFont);	// preserves font for future drawings
-    	
+        Font ogFont = g2d.getFont();
+
+        g2d.setFont(new Font("Comic Sans MS", Font.PLAIN, 18));
+        g2d.drawString("Lives: " + model.getPlayer().getLives(), 20, 30);
+        g2d.drawString("Score: " + model.getPlayer().getScore(), 20, 60);
+        g2d.drawString("Level: " + model.getCurrentLevel() + "/" + model.getMaxLevel(), 20, 90);
+
+        g2d.setFont(ogFont);
     }
-    
+
+    private void printGameOver(Graphics2D g2d) {
+        Font ogFont = g2d.getFont();
+        g2d.setFont(new Font("Comic Sans MS", Font.PLAIN, 50));
+        g2d.drawString("Game Over!", model.getWorldWidth()/2 - 125, model.getWorldHeight()/2);
+        g2d.setFont(ogFont);
+    }
+
+    private void printYouWin(Graphics2D g2d) {
+        Font ogFont = g2d.getFont();
+        g2d.setFont(new Font("Comic Sans MS", Font.PLAIN, 50));
+        g2d.drawString("YOU WIN!", model.getWorldWidth()/2 - 110, model.getWorldHeight()/2);
+        g2d.setFont(ogFont);
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        if (model.isGameWon()) {
-            g2.setFont(new Font("Comic Sans MS", Font.PLAIN, 50));
-            g2.drawString("LEVEL COMPLETE!",
-                    model.getWorldWidth()/2 - 180,
-                    model.getWorldHeight()/2);
+        if (model.getPlayer().getLives() <= 0) {
+            printGameOver(g2);
             return;
         }
 
-        if (model.getPlayer().getLives() > 0) {
-
-            for (GameObject obj : model.getObjects()) {
-                obj.drawOn(g2);
-            }
-
-            printHUD(g2);
-
-        } else {
-            printGameOver(g2);
+        if (model.isGameWon()) {
+            printYouWin(g2);
+            return;
         }
+
+        for (GameObject obj : model.getObjects()) {
+            obj.drawOn(g2);
+        }
+        printHUD(g2);
     }
-
 }
-

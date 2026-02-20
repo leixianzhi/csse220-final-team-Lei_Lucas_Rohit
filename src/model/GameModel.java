@@ -21,38 +21,28 @@ public class GameModel {
     private Player player;
     private NextLevel nextLevel;
 
+    // ===== level system =====
+    private int currentLevel = 1;
+    private final int maxLevel;
+
+    // Defer level switching to AFTER the update loop to avoid ConcurrentModificationException
+    private boolean pendingAdvance = false;
+
+    // Final win (after last level)
     private boolean gameWon = false;
 
     public GameModel(int worldWidth, int worldHeight) {
         this.worldWidth = worldWidth;
         this.worldHeight = worldHeight;
 
-        buildLevel(1);
-
-        objects.add(player);
-
-        for (Enemy enemy : enemies) {
-            objects.add(enemy);
-        }
-
-        for (Collectible collectible : collectibles) {
-            objects.add(collectible);
-        }
-
-        for (Wall wall : walls) {
-            objects.add(wall);
-        }
-
-        if (nextLevel != null) {
-            objects.add(nextLevel);
-        }
+        this.maxLevel = detectMaxLevel();
+        loadLevel(currentLevel);
     }
 
     public void updateAll() {
-
         if (gameWon) return;
 
-        // Check if all collectibles collected
+        // Check if all collectibles collected -> open exit
         boolean allCollected = true;
         for (Collectible c : collectibles) {
             if (!c.isCollected()) {
@@ -60,19 +50,61 @@ public class GameModel {
                 break;
             }
         }
-
         if (allCollected && nextLevel != null) {
             nextLevel.setOpen(true);
         }
 
-        for (GameObject obj : objects) {
+        // Iterate over a snapshot so objects can be rebuilt later safely
+        ArrayList<GameObject> snapshot = new ArrayList<>(objects);
+        for (GameObject obj : snapshot) {
             obj.update(this);
+        }
+
+        // After everyone updates, handle any requested level advance
+        if (pendingAdvance) {
+            pendingAdvance = false;
+            advanceLevelOrWin();
         }
     }
 
+    /** Player calls this when it touches an OPEN exit. (Does NOT switch immediately.) */
+    public void requestAdvanceLevel() {
+        // If already requested, do nothing (prevents repeated requests while overlapping exit)
+        if (!pendingAdvance) {
+            pendingAdvance = true;
+        }
+    }
+
+    private void advanceLevelOrWin() {
+        if (currentLevel < maxLevel) {
+            currentLevel++;
+            loadLevel(currentLevel);
+        } else {
+            gameWon = true;
+        }
+    }
+
+    /** Clears and rebuilds level objects from levelN.txt. Keeps the same Player instance across levels. */
+    private void loadLevel(int levelNum) {
+        // Clear old level data (keep player reference, but we'll reposition it)
+        objects.clear();
+        enemies.clear();
+        collectibles.clear();
+        walls.clear();
+        nextLevel = null;
+
+        buildLevel(levelNum);
+
+        // Rebuild draw/update list
+        if (player != null) objects.add(player);
+        objects.addAll(enemies);
+        objects.addAll(collectibles);
+        objects.addAll(walls);
+        if (nextLevel != null) objects.add(nextLevel);
+    }
+
     private void buildLevel(int levelNum) {
-    	
-    	File levelFile = new File("level" + levelNum + ".txt");
+        File levelFile = new File("level" + levelNum + ".txt");
 
         ArrayList<String> lines = new ArrayList<>();
         int levelWidth = 0;
@@ -93,7 +125,6 @@ public class GameModel {
 
             for (int row = 0; row < lines.size(); row++) {
                 for (int col = 0; col < lines.get(row).length(); col++) {
-
                     char tile = lines.get(row).charAt(col);
 
                     if (tile == '*') {
@@ -103,32 +134,34 @@ public class GameModel {
                                 TILE_WIDTH,
                                 TILE_HEIGHT
                         ));
-                    }
-                    else if (tile == 'E') {
+                    } else if (tile == 'E') {
                         enemies.add(new Enemy(
                                 col * TILE_WIDTH + TILE_WIDTH / 4,
                                 row * TILE_HEIGHT + TILE_HEIGHT / 4,
                                 TILE_WIDTH / 2,
                                 TILE_HEIGHT / 2
                         ));
-                    }
-                    else if (tile == 'o') {
+                    } else if (tile == 'o') {
                         collectibles.add(new Collectible(
                                 col * TILE_WIDTH + TILE_WIDTH / 4,
                                 row * TILE_HEIGHT + TILE_HEIGHT / 4,
                                 TILE_WIDTH / 2,
                                 TILE_HEIGHT / 2
                         ));
-                    }
-                    else if (tile == 'P') {
-                        player = new Player(
-                                col * TILE_WIDTH + TILE_WIDTH / 4,
-                                row * TILE_HEIGHT + TILE_HEIGHT / 4,
-                                TILE_WIDTH / 2,
-                                TILE_HEIGHT / 2
-                        );
-                    }
-                    else if (tile == 'N') {
+                    } else if (tile == 'P') {
+                        int px = col * TILE_WIDTH + TILE_WIDTH / 4;
+                        int py = row * TILE_HEIGHT + TILE_HEIGHT / 4;
+                        int pw = TILE_WIDTH / 2;
+                        int ph = TILE_HEIGHT / 2;
+
+                        // Keep player across levels so score/lives persist
+                        if (player == null) {
+                            player = new Player(px, py, pw, ph);
+                        } else {
+                            player.setPosition(px, py);
+                            player.setSize(pw, ph);
+                        }
+                    } else if (tile == 'N') {
                         nextLevel = new NextLevel(
                                 col * TILE_WIDTH,
                                 row * TILE_HEIGHT,
@@ -140,8 +173,17 @@ public class GameModel {
             }
 
         } catch (FileNotFoundException e) {
-            System.out.println("Level file not found.");
+            System.out.println("Level file not found: " + levelFile.getName());
         }
+    }
+
+    /** Detects max level by checking for level1.txt, level2.txt, ... */
+    private int detectMaxLevel() {
+        int n = 1;
+        while (new File("level" + n + ".txt").exists()) {
+            n++;
+        }
+        return Math.max(1, n - 1);
     }
 
     public List<GameObject> getObjects() { return objects; }
@@ -149,12 +191,13 @@ public class GameModel {
     public List<Enemy> getEnemies() { return enemies; }
     public List<Collectible> getCollectibles() { return collectibles; }
     public List<Wall> getWalls() { return walls; }
-
     public NextLevel getNextLevel() { return nextLevel; }
 
     public int getWorldWidth() { return worldWidth; }
     public int getWorldHeight() { return worldHeight; }
 
     public boolean isGameWon() { return gameWon; }
-    public void setGameWon() { gameWon = true; }
+
+    public int getCurrentLevel() { return currentLevel; }
+    public int getMaxLevel() { return maxLevel; }
 }

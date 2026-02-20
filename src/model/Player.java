@@ -1,6 +1,8 @@
 package model;
+
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+
 import javax.imageio.ImageIO;
 
 import ui.Wall;
@@ -9,43 +11,41 @@ public class Player extends GameObject {
 
     private int lives = 3;
     private int score = 0;
-	private final int speed = 4;
+    private final int speed = 4;
+
     private boolean left, right, up, down;
     private boolean hitLastFrame = false;
+
     private BufferedImage sprite;
 
     public Player(int x, int y) {
         super(x, y, 32, 32);
 
         try {
-            sprite = ImageIO.read(
-                getClass().getResource("steve.png")
-            );
+            sprite = ImageIO.read(getClass().getResource("steve.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     public Player(int x, int y, int width, int height) {
-    	super(x, y, width, height);
-    	
-    	try {
-    		sprite = ImageIO.read(
-    				getClass().getResource("steve.png")
-    				);
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
+        super(x, y, width, height);
+
+        try {
+            sprite = ImageIO.read(getClass().getResource("steve.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setLeft(boolean v)  { left = v; }
     public void setRight(boolean v) { right = v; }
     public void setUp(boolean v)    { up = v; }
     public void setDown(boolean v)  { down = v; }
-    
+
     public int getLives() { return lives; }
     public int getScore() { return score; }
-    
+
     @Override
     public void update(GameModel model) {
 
@@ -82,12 +82,12 @@ public class Player extends GameObject {
 
         hitLastFrame = hitThisFrame;
 
-        // WIN CONDITION
+        // EXIT: request next level (deferred; avoids ConcurrentModificationException)
         if (model.getNextLevel() != null &&
                 model.getNextLevel().isOpen() &&
                 getBounds().intersects(model.getNextLevel().getBounds())) {
 
-            model.setGameWon();
+            model.requestAdvanceLevel();
         }
     }
 
@@ -110,7 +110,6 @@ public class Player extends GameObject {
             }
         }
     }
-
 
     @Override
     public void drawOn(Graphics2D g2) {

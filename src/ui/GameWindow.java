@@ -1,35 +1,43 @@
 package ui;
 
-import javax.swing.JFrame;
+import javax.swing.*;
+import java.awt.*;
 
 import model.GameModel;
-
-import javax.swing.JFrame;
-
 
 public class GameWindow {
 
     public static void show() {
 
-        GameModel model = new GameModel(600, 600);
-        GameComponent view = new GameComponent(model);
-
         JFrame frame = new JFrame("CSSE220 Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(view);
-        GameController controller = new GameController(model.getPlayer());
-     // frame.addKeyListener(controller);    
-        view.addKeyListener(controller);          
-        frame.setVisible(true);
-        view.setFocusable(true);
-        view.requestFocusInWindow();
-
-        frame.pack();
+        frame.setSize(600, 600);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
+
+        CardLayout cardLayout = new CardLayout();
+        JPanel mainPanel = new JPanel(cardLayout);
+
+        // ===== GAME MODEL + VIEW =====
+        GameModel model = new GameModel(600, 600);
+        GameComponent gameComponent = new GameComponent(model);
+        GameController controller = new GameController(model.getPlayer());
+        gameComponent.addKeyListener(controller);
+        gameComponent.setFocusable(true);
+
+        // ===== START PANEL =====
+        StartPanel startPanel = new StartPanel(() -> {
+            cardLayout.show(mainPanel, "GAME");
+            gameComponent.requestFocusInWindow();
+        });
+
+        mainPanel.add(startPanel, "START");
+        mainPanel.add(gameComponent, "GAME");
+
+        frame.add(mainPanel);
         frame.setVisible(true);
 
-        view.setFocusable(true);
-        view.requestFocusInWindow();
+        // Show start screen first
+        cardLayout.show(mainPanel, "START");
     }
 }

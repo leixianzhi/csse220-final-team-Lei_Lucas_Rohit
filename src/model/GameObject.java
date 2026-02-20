@@ -17,6 +17,18 @@ public abstract class GameObject {
         return new Rectangle(x, y, w, h);
     }
 
+    /** Allows levels (and other systems) to reposition existing objects safely. */
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    /** Allows levels to resize existing objects when tile sizes change. */
+    public void setSize(int w, int h) {
+        this.w = w;
+        this.h = h;
+    }
+
     public abstract void update(GameModel model);
 
     public abstract void drawOn(Graphics2D g2);
